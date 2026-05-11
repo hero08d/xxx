@@ -1,0 +1,1396 @@
+3,18 arrays
+2,17 fractions
+4,19 method overloading
+5,6,20,21 packages
+7,22 Inheritance, payroll
+8,23 Interface + Polymorphism
+9,24,25,26 Strings
+10,27 Exception Handling
+11,28 File Handling
+12,13,14,29 Multithreading
+1,6 Tax Calculation
+15,30 Javafx
+------------------------
+
+3.
+
+import java.util.*;
+
+public class Main {
+
+    // Manual method
+    static boolean checkManual(int[] a, int[] b) {
+        if (a.length != b.length) return false;
+
+        for (int i = 0; i < a.length; i++)
+            if (a[i] != b[i]) return false;
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter size: ");
+        int n = sc.nextInt();
+
+        int[] a = new int[n];
+        int[] b = new int[n];
+
+        System.out.println("Enter array1:");
+        for (int i = 0; i < n; i++) a[i] = sc.nextInt();
+
+        System.out.println("Enter array2:");
+        for (int i = 0; i < n; i++) b[i] = sc.nextInt();
+
+        // Manual check
+        boolean res1 = checkManual(a, b);
+
+        // Predefined check
+        boolean res2 = Arrays.equals(a, b);
+
+        System.out.println("\nManual Check: " + (res1 ? "Equal" : "Not Equal"));
+        System.out.println("Using Arrays.equals(): " + (res2 ? "Equal" : "Not Equal"));
+    }
+}
+
+4.add override
+import java.util.*;
+
+class Add {
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    int add(int[] arr) {
+        int sum = 0;
+        for (int i : arr) sum += i;
+        return sum;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Add obj = new Add();
+
+        System.out.print("Enter 2 integers: ");
+        int a = sc.nextInt(), b = sc.nextInt();
+
+        System.out.print("Enter 3 integers: ");
+        int x = sc.nextInt(), y = sc.nextInt(), z = sc.nextInt();
+
+        System.out.print("Enter array size: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+
+        System.out.print("Enter 2 doubles: ");
+        double d1 = sc.nextDouble(), d2 = sc.nextDouble();
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("Sum (2 int): " + obj.add(a, b));
+        System.out.println("Sum (3 int): " + obj.add(x, y, z));
+        System.out.println("Sum (array): " + obj.add(arr));
+        System.out.println("Sum (double): " + obj.add(d1, d2));
+    }
+}
+
+
+5.
+package CalcPkg;
+
+public class Calculator {
+
+    public int add(int a, int b) { return a + b; }
+    public int sub(int a, int b) { return a - b; }
+    public int mul(int a, int b) { return a * b; }
+    public int div(int a, int b) { return a / b; }
+    public int mod(int a, int b) { return a % b; }
+}
+
+
+import java.util.*;
+import CalcPkg.Calculator;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Calculator c = new Calculator();
+
+        System.out.print("Enter two numbers: ");
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("Addition: " + c.add(a, b));
+        System.out.println("Subtraction: " + c.sub(a, b));
+        System.out.println("Multiplication: " + c.mul(a, b));
+        System.out.println("Division: " + c.div(a, b));
+        System.out.println("Modulus: " + c.mod(a, b));
+    }
+}
+
+
+
+6.
+package MCA;
+
+public class Student {
+    String name;
+    int roll;
+    int[] m;
+
+    // Parameterized Constructor
+    public Student(String name, int roll, int[] m) {
+        this.name = name;
+        this.roll = roll;
+        this.m = m;
+    }
+
+    public void display() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll: " + roll);
+    }
+}
+
+
+import java.util.*;
+import MCA.Student;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Roll: ");
+        int roll = sc.nextInt();
+
+        int[] m = new int[5];
+        System.out.println("Enter 5 marks:");
+        for (int i = 0; i < 5; i++)
+            m[i] = sc.nextInt();
+
+        Student s = new Student(name, roll, m);
+
+        int total = 0;
+        for (int i : m) total += i;
+
+        double per = total / 5.0;
+
+        System.out.println("\n--- RESULT ---");
+        s.display();
+        System.out.println("Total: " + total);
+        System.out.println("Percentage: " + per);
+    }
+}
+
+
+
+7.
+
+import java.util.*;
+
+class Employee {
+    String name, address, mail, mobile, desig;
+    int id;
+    double bp, da, hra, pf, club, gross, net;
+
+    void getData() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Name: "); name = sc.next();
+        System.out.print("ID: "); id = sc.nextInt();
+        System.out.print("Address: "); address = sc.next();
+        System.out.print("Mail: "); mail = sc.next();
+        System.out.print("Mobile: "); mobile = sc.next();
+        System.out.print("Basic Pay: "); bp = sc.nextDouble();
+    }
+
+    void calculate() {
+        da = 0.97 * bp;
+        hra = 0.10 * bp;
+        pf = 0.12 * bp;
+        club = 0.001 * bp;   // 0.1%
+
+        gross = bp + da + hra;
+        net = gross - pf - club;
+    }
+
+    void display() {
+        System.out.println("\n--- PAYSLIP ---");
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + id);
+        System.out.println("Designation: " + desig);
+        System.out.println("Address: " + address);
+        System.out.println("Mail: " + mail);
+        System.out.println("Mobile: " + mobile);
+        System.out.println("Basic Pay: " + bp);
+        System.out.println("DA: " + da);
+        System.out.println("HRA: " + hra);
+        System.out.println("PF: " + pf);
+        System.out.println("Staff Club: " + club);
+        System.out.println("Gross Salary: " + gross);
+        System.out.println("Net Salary: " + net);
+    }
+}
+
+// Derived Classes
+class Programmer extends Employee {
+    Programmer() { desig = "Programmer"; }
+}
+
+class AssistantProf extends Employee {
+    AssistantProf() { desig = "Assistant Professor"; }
+}
+
+class AssociateProf extends Employee {
+    AssociateProf() { desig = "Associate Professor"; }
+}
+
+class Professor extends Employee {
+    Professor() { desig = "Professor"; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("1.Programmer 2.AsstProf 3.AssocProf 4.Professor");
+        int ch = sc.nextInt();
+
+        Employee e = null;
+
+        if (ch == 1) e = new Programmer();
+        else if (ch == 2) e = new AssistantProf();
+        else if (ch == 3) e = new AssociateProf();
+        else if (ch == 4) e = new Professor();
+
+        if (e != null) {
+            e.getData();
+            e.calculate();
+            e.display();
+        }
+    }
+}
+8.calculator
+import java.util.*;
+
+interface AdvancedArithmetic {
+    int sum(int a, int b);
+    int sub(int a, int b);
+    int mul(int a, int b);
+    int div(int a, int b);
+    int divisorSum(int n);
+}
+
+class MyCalculator implements AdvancedArithmetic {
+
+    public int sum(int a, int b) { return a + b; }
+    public int sub(int a, int b) { return a - b; }
+    public int mul(int a, int b) { return a * b; }
+    public int div(int a, int b) { return a / b; }
+
+    public int divisorSum(int n) {
+        int sum = 0;
+        for (int i = 1; i <= n; i++)
+            if (n % i == 0) sum += i;
+        return sum;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        AdvancedArithmetic obj = new MyCalculator();
+
+        System.out.print("Enter two numbers: ");
+        int a = sc.nextInt(), b = sc.nextInt();
+
+        System.out.print("Enter number for divisor sum: ");
+        int n = sc.nextInt();
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("Sum: " + obj.sum(a, b));
+        System.out.println("Sub: " + obj.sub(a, b));
+        System.out.println("Mul: " + obj.mul(a, b));
+        System.out.println("Div: " + obj.div(a, b));
+        System.out.println("Divisor Sum: " + obj.divisorSum(n));
+    }
+}
+
+
+
+
+10.Exception handling- negative
+
+
+import java.util.*;
+
+class NegativeValueException extends Exception {
+    NegativeValueException(String msg) {
+        super(msg);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter size: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            try {
+                System.out.print("Enter element: ");
+                int x = sc.nextInt();
+
+                if (x < 0)
+                    throw new NegativeValueException("Negative value not allowed");
+
+                arr[i] = x;
+
+            } catch (NegativeValueException e) {
+                System.out.println("Error: " + e.getMessage());
+                i--; // retry same index
+            }
+        }
+
+        System.out.println("Valid Array:");
+        for (int i : arr) System.out.print(i + " ");
+    }
+}
+
+
+
+11.file handling-title
+
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("source.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("destination.txt"));
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String result = "";
+
+                for (String w : line.split(" ")) {
+                    result += w.substring(0,1).toUpperCase() +
+                              w.substring(1).toLowerCase() + " ";
+                }
+
+                bw.write(result.trim());
+                bw.
+
+();
+            }
+
+            br.close();
+            bw.close();
+
+            System.out.println("File processed successfully");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+
+
+12. multithreading odd/even
+
+class Num extends Thread {
+    static int ec = 0, oc = 0;
+
+    public void run() {
+        try {
+            while (true) {
+                int n = (int)(Math.random() * 50) + 1;
+                System.out.println("\nGenerated: " + n);
+
+                if (n % 2 == 0)
+                    new Even(n).start();
+                else
+                    new Odd(n).start();
+
+                sleep(1000);
+            }
+        } catch (Exception e) {}
+    }
+}
+
+class Even extends Thread {
+    int n;
+    Even(int n) { this.n = n; }
+
+    public void run() {
+        Num.ec++;
+        System.out.println("Even: " + n +
+            " Square: " + (n*n) +
+            " Count: " + Num.ec);
+    }
+}
+
+class Odd extends Thread {
+    int n;
+    Odd(int n) { this.n = n; }
+
+    public void run() {
+        Num.oc++;
+        System.out.println("Odd: " + n +
+            " Cube: " + (n*n*n) +
+            " Count: " + Num.oc);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new Num().start();
+    }
+}
+
+
+
+
+14.A-Z thread
+
+
+class T1 extends Thread {
+    public void run() {
+        try {
+            for (char c = 'A'; c <= 'Z'; c++) {
+                System.out.print(c + " ");
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {}
+    }
+}
+
+class T2 extends Thread {
+    public void run() {
+        try {
+            for (char c = 'Z'; c >= 'A'; c--) {
+                System.out.print(c + " ");
+                Thread.sleep(2000);
+            }
+        } catch (Exception e) {}
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        T1 t1 = new T1();
+        T2 t2 = new T2();
+
+        t1.start();
+
+        try {
+            t1.join();   // wait until T1 finishes
+        } catch (Exception e) {}
+
+        t2.start();
+
+        try {
+            t2.join();   // wait until T2 finishes
+        } catch (Exception e) {}
+
+        System.out.println("\nDone");
+    }
+}
+
+15. same as Q30
+16.income tax
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Employee Salary: ");
+        double salary = sc.nextDouble();
+
+        double oldTax = calculateOldTax(salary);
+        double newTax = calculateNewTax(salary);
+
+        System.out.println("\nOld Tax Regime Tax = " + oldTax);
+        System.out.println("New Tax Regime Tax = " + newTax);
+
+        if (oldTax < newTax) {
+            System.out.println("\nSuggested Regime: OLD TAX REGIME (Less Tax)");
+        } else if (newTax < oldTax) {
+            System.out.println("\nSuggested Regime: NEW TAX REGIME (Less Tax)");
+        } else {
+            System.out.println("\nBoth regimes have same tax amount.");
+        }
+    }
+
+    // Method to calculate Old Tax Regime
+    public static double calculateOldTax(double salary) {
+        double tax = 0;
+
+        if (salary > 1500000) {
+            tax += (salary - 1500000) * 0.30;
+            salary = 1500000;
+        }
+        if (salary > 1000000) {
+            tax += (salary - 1000000) * 0.30;
+            salary = 1000000;
+        }
+        if (salary > 750000) {
+            tax += (salary - 750000) * 0.20;
+            salary = 750000;
+        }
+        if (salary > 500000) {
+            tax += (salary - 500000) * 0.20;
+            salary = 500000;
+        }
+        if (salary > 250000) {
+            tax += (salary - 250000) * 0.05;
+        }
+
+        return tax;
+    }
+
+    // Method to calculate New Tax Regime
+    public static double calculateNewTax(double salary) {
+        double tax = 0;
+
+        if (salary > 1500000) {
+            tax += (salary - 1500000) * 0.30;
+            salary = 1500000;
+        }
+        if (salary > 1250000) {
+            tax += (salary - 1250000) * 0.25;
+            salary = 1250000;
+        }
+        if (salary > 1000000) {
+            tax += (salary - 1000000) * 0.20;
+            salary = 1000000;
+        }
+        if (salary > 750000) {
+            tax += (salary - 750000) * 0.15;
+            salary = 750000;
+        }
+        if (salary > 500000) {
+            tax += (salary - 500000) * 0.10;
+            salary = 500000;
+        }
+        if (salary > 250000) {
+            tax += (salary - 250000) * 0.05;
+        }
+
+        return tax;
+	double cess = tax * 0.04;
+        double total = tax + cess;
+
+        System.out.println("Tax: " + tax);
+        System.out.println("Cess: " + cess);
+        System.out.println("Total Tax Payable: " + total);
+    }
+}
+
+
+
+17.fraction addition
+import java.util.*;
+
+public class Main {
+
+    static int gcd(int a, int b) {
+        return (b == 0) ? a : gcd(b, a % b);
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        // Input fractions
+        int n1 = sc.nextInt(), d1 = sc.nextInt();
+        int n2 = sc.nextInt(), d2 = sc.nextInt();
+
+        // Subtraction: (n1*d2 - n2*d1) / (d1*d2)
+        int num = n1 * d2 - n2 * d1;
+        int den = d1 * d2;
+
+        // Simplify
+        int g = gcd(num, den);
+        num /= g;
+        den /= g;
+
+        System.out.println("Result: " + num + "/" + den);
+    }
+}
+
+
+
+
+18.Array merging
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n1 = sc.nextInt(), n2 = sc.nextInt();
+        int[] a = new int[n1], b = new int[n2];
+
+        for (int i = 0; i < n1; i++) a[i] = sc.nextInt();
+        for (int i = 0; i < n2; i++) b[i] = sc.nextInt();
+
+        // Merge
+        int[] m = new int[n1 + n2];
+        for (int i = 0; i < n1; i++) m[i] = a[i];
+        for (int i = 0; i < n2; i++) m[n1 + i] = b[i];
+
+        // Remove duplicates
+        int[] u = new int[m.length];
+        int k = 0;
+        for (int i = 0; i < m.length; i++) {
+            int j;
+            for (j = 0; j < k; j++)
+                if (m[i] == u[j]) break;
+            if (j == k) u[k++] = m[i];
+        }
+
+        Arrays.sort(u, 0, k);
+
+        int sum = 0, max = u[0], min = u[0];
+        for (int i = 0; i < k; i++) {
+            sum += u[i];
+            if (u[i] > max) max = u[i];
+            if (u[i] < min) min = u[i];
+        }
+
+        // Output
+        for (int i = 0; i < k; i++) System.out.print(u[i] + " ");
+        System.out.println("\nSum=" + sum + " Max=" + max + " Min=" + min);
+    }
+}
+
+
+
+
+19.Multiplication overriden
+
+import java.util.*;
+class Multiply {
+
+    int multiply(int a, int b) {
+        return a * b;
+    }
+
+    int multiply(int a, int b, int c) {
+        return a * b * c;
+    }
+
+    int multiply(int[] arr) {
+        int p = 1;
+        for (int i : arr) p *= i;
+        return p;
+    }
+
+    double multiply(double a, double b) {
+        return a * b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Multiply m = new Multiply();
+
+        System.out.print("Enter 2 integers: ");
+        int a = sc.nextInt(), b = sc.nextInt();
+
+        System.out.print("Enter 3 integers: ");
+        int x = sc.nextInt(), y = sc.nextInt(), z = sc.nextInt();
+
+        System.out.print("Enter size of array: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        System.out.println("Enter array elements:");
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+
+        System.out.print("Enter 2 doubles: ");
+        double d1 = sc.nextDouble(), d2 = sc.nextDouble();
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("2 Int Product: " + m.multiply(a, b));
+        System.out.println("3 Int Product: " + m.multiply(x, y, z));
+        System.out.println("Array Product: " + m.multiply(arr));
+        System.out.println("Double Product: " + m.multiply(d1, d2));
+    }
+}
+
+
+
+
+20.
+
+package CalcPkg;
+
+public class Calculator {
+
+    public double power(double x, double y) {
+        return Math.pow(x, y);
+    }
+
+    public double sqrt(double x) {
+        return Math.sqrt(x);
+    }
+
+    public int factorial(int n) {
+        int f = 1;
+        for (int i = 1; i <= n; i++) f *= i;
+        return f;
+    }
+
+    public int gcd(int a, int b) {
+        while (b != 0) {
+            int t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+}
+
+
+
+import java.util.*;
+import CalcPkg.Calculator;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Calculator c = new Calculator();
+
+        System.out.print("Enter x and y for power: ");
+        double x = sc.nextDouble();
+        double y = sc.nextDouble();
+
+        System.out.print("Enter number for sqrt: ");
+        double s = sc.nextDouble();
+
+        System.out.print("Enter number for factorial: ");
+        int n = sc.nextInt();
+
+        System.out.print("Enter two numbers for GCD: ");
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("Power: " + c.power(x, y));
+        System.out.println("Square Root: " + c.sqrt(s));
+        System.out.println("Factorial: " + c.factorial(n));
+        System.out.println("GCD: " + c.gcd(a, b));
+    }
+}
+
+
+21. student management
+
+package StudentMgmt;
+
+public class Student {
+    public String name;
+    public int roll;
+    public int[] m = new int[5];
+
+    public int total() {
+        int sum = 0;
+        for (int i : m) sum += i;
+        return sum;
+    }
+
+    public double average() {
+        return total() / 5.0;
+    }
+
+    public String grade() {
+        double avg = average();
+        if (avg >= 90) return "A";
+        else if (avg >= 75) return "B";
+        else if (avg >= 50) return "C";
+        else return "Fail";
+    }
+}
+
+
+
+import java.util.*;
+import StudentMgmt.Student;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Student s = new Student();
+
+        System.out.print("Name: ");
+        s.name = sc.nextLine();
+
+        System.out.print("Roll: ");
+        s.roll = sc.nextInt();
+
+        System.out.println("Enter 5 marks:");
+        for (int i = 0; i < 5; i++)
+            s.m[i] = sc.nextInt();
+
+        System.out.println("\n--- RESULT ---");
+        System.out.println("Name: " + s.name);
+        System.out.println("Roll: " + s.roll);
+        System.out.println("Total: " + s.total());
+        System.out.println("Average: " + s.average());
+        System.out.println("Grade: " + s.grade());
+    }
+}
+
+
+
+
+
+22.Employee payslip
+
+import java.util.*;
+
+class Employee {
+    String name, desig;
+    int id;
+    double bp, da, hra, pf, gross, net;
+
+    void getData() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Name: "); name = sc.next();
+        System.out.print("ID: "); id = sc.nextInt();
+        System.out.print("Basic Pay: "); bp = sc.nextDouble();
+    }
+
+    void calculate() {
+        da = 0.97 * bp;
+        hra = 0.10 * bp;
+        pf = 0.12 * bp;
+        gross = bp + da + hra;
+        net = gross - pf - (0.10 * gross);
+    }
+
+    void display() {
+        System.out.println("\n--- PAYSLIP ---");
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + id);
+        System.out.println("Designation: " + desig);
+        System.out.println("Basic Pay: " + bp);
+        System.out.println("DA: " + da);
+        System.out.println("HRA: " + hra);
+        System.out.println("PF: " + pf);
+        System.out.println("Gross: " + gross);
+        System.out.println("Net Salary: " + net);
+    }
+}
+
+class Manager extends Employee {
+    Manager() { desig = "Manager"; }
+}
+
+class Engineer extends Employee {
+    Engineer() { desig = "Engineer"; }
+}
+
+class Clerk extends Employee {
+    Clerk() { desig = "Clerk"; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("1.Manager 2.Engineer 3.Clerk");
+        int ch = sc.nextInt();
+
+        Employee e = null;
+
+        if (ch == 1) e = new Manager();
+        else if (ch == 2) e = new Engineer();
+        else if (ch == 3) e = new Clerk();
+
+        e.getData();
+        e.calculate();
+        e.display();
+    }
+}
+
+
+
+23. payment
+
+import java.util.*;
+
+interface Payment {
+    void pay(double amount);
+}
+
+class CreditCard implements Payment {
+    double bal = 5000;
+    public void pay(double amt) {
+        if (bal >= amt) {
+            bal -= amt;
+            System.out.println("CreditCard Paid: " + amt +
+                " Balance: " + bal +
+                " TxnID: " + System.currentTimeMillis());
+        } else System.out.println("Insufficient Balance");
+    }
+}
+
+class DebitCard implements Payment {
+    double bal = 3000;
+    public void pay(double amt) {
+        if (bal >= amt) {
+            bal -= amt;
+            System.out.println("DebitCard Paid: " + amt +
+                " Balance: " + bal +
+                " TxnID: " + System.currentTimeMillis());
+        } else System.out.println("Insufficient Balance");
+    }
+}
+
+class UPI implements Payment {
+    double bal = 2000;
+    public void pay(double amt) {
+        if (bal >= amt) {
+            bal -= amt;
+            System.out.println("UPI Paid: " + amt +
+                " Balance: " + bal +
+                " TxnID: " + System.currentTimeMillis());
+        } else System.out.println("Insufficient Balance");
+    }
+}
+
+class NetBanking implements Payment {
+    double bal = 4000;
+    public void pay(double amt) {
+        if (bal >= amt) {
+            bal -= amt;
+            System.out.println("NetBanking Paid: " + amt +
+                " Balance: " + bal +
+                " TxnID: " + System.currentTimeMillis());
+        } else System.out.println("Insufficient Balance");
+    }
+}
+
+class Wallet implements Payment {
+    double bal = 1000;
+    public void pay(double amt) {
+        if (bal >= amt) {
+            bal -= amt;
+            System.out.println("Wallet Paid: " + amt +
+                " Balance: " + bal +
+                " TxnID: " + System.currentTimeMillis());
+        } else System.out.println("Insufficient Balance");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("1.Credit 2.Debit 3.UPI 4.NetBanking 5.Wallet");
+        int ch = sc.nextInt();
+
+        System.out.print("Enter amount: ");
+        double amt = sc.nextDouble();
+
+        Payment p = null; // interface reference
+
+        switch (ch) {
+            case 1: p = new CreditCard(); break;
+            case 2: p = new DebitCard(); break;
+            case 3: p = new UPI(); break;
+            case 4: p = new NetBanking(); break;
+            case 5: p = new Wallet(); break;
+        }
+
+        if (p != null) p.pay(amt);
+    }
+}
+
+
+
+24.anagram
+
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String s1 = sc.nextLine();
+        String s2 = sc.nextLine();
+
+        // remove spaces & make lowercase
+        s1 = s1.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        s2 = s2.replaceAll("[^a-zA-Z]", "").toLowerCase();
+
+        // ----- ANAGRAM -----
+        char a[] = s1.toCharArray();
+        char b[] = s2.toCharArray();
+
+        Arrays.sort(a);
+        Arrays.sort(b);
+
+        if(Arrays.equals(a, b))
+            System.out.println("Anagrams");
+        else
+            System.out.println("Not Anagrams");
+
+        // ----- PALINDROME -----
+        String rev1 = "";
+        for(int i = s1.length()-1; i >= 0; i--)
+            rev1 += s1.charAt(i);
+
+        String rev2 = "";
+        for(int i = s2.length()-1; i >= 0; i--)
+            rev2 += s2.charAt(i);
+
+        System.out.println(s1.equals(rev1) ? "String1 Palindrome" : "String1 Not Palindrome");
+        System.out.println(s2.equals(rev2) ? "String2 Palindrome" : "String2 Not Palindrome");
+    }
+}
+
+25.import java.util.*;
+
+class StringOperations {
+
+    // Count vowels
+    int countVowels(String str) {
+        int count = 0;
+        str = str.toLowerCase();
+
+        for(int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if(ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u')
+                count++;
+        }
+        return count;
+    }
+
+    // Check palindrome
+    boolean isPalindrome(String str) {
+        String rev = "";
+
+        for(int i = str.length()-1; i >= 0; i--)
+            rev += str.charAt(i);
+
+        return str.equalsIgnoreCase(rev);
+    }
+
+    // Reverse string
+    String reverse(String str) {
+        String rev = "";
+
+        for(int i = str.length()-1; i >= 0; i--)
+            rev += str.charAt(i);
+
+        return rev;
+    }
+
+    // Count words
+    int countWords(String str) {
+        String words[] = str.trim().split(" ");
+        return words.length;
+    }
+
+    // Remove duplicate characters
+    String removeDuplicates(String str) {
+        String result = "";
+
+        for(int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+
+            if(result.indexOf(ch) == -1)
+                result += ch;
+        }
+        return result;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String input = sc.nextLine();
+
+        StringOperations obj = new StringOperations();
+
+        System.out.println("Vowels: " + obj.countVowels(input));
+        System.out.println("Palindrome: " + obj.isPalindrome(input));
+        System.out.println("Reverse: " + obj.reverse(input));
+        System.out.println("Words: " + obj.countWords(input));
+        System.out.println("No Duplicates: " + obj.removeDuplicates(input));
+    }
+}
+
+
+26. upper lower reverse countspaces
+
+import java.util.*;
+
+class SimpleStringOperations {
+
+    int lengthOfString(String str) {
+        return str.length();
+    }
+
+    String toUpperCase(String str) {
+        return str.toUpperCase();
+    }
+
+    String toLowerCase(String str) {
+        return str.toLowerCase();
+    }
+
+    String reverseString(String str) {
+        String rev = "";
+        for (int i = str.length() - 1; i >= 0; i--)
+            rev += str.charAt(i);
+        return rev;
+    }
+
+    int countSpaces(String str) {
+        int count = 0;
+        for (char c : str.toCharArray())
+            if (c == ' ') count++;
+        return count;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter string: ");
+        String input = sc.nextLine();
+
+        SimpleStringOperations obj = new SimpleStringOperations();
+
+        System.out.println("Length: " + obj.lengthOfString(input));
+        System.out.println("Uppercase: " + obj.toUpperCase(input));
+        System.out.println("Lowercase: " + obj.toLowerCase(input));
+        System.out.println("Reverse: " + obj.reverseString(input));
+        System.out.println("Spaces: " + obj.countSpaces(input));
+    }
+}
+
+
+
+27. age exception
+
+import java.util.*;
+
+class InvalidAgeException extends Exception {
+    InvalidAgeException(String msg) {
+        super(msg);
+    }
+}
+
+public class Voting {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter age: ");
+            int age = sc.nextInt();
+
+            if (age < 18)
+                throw new InvalidAgeException("Not eligible for voting");
+
+            System.out.println("Eligible to vote");
+
+        } catch (InvalidAgeException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+
+28. file handling
+
+import java.io.*;
+
+public class FileAnalysis {
+    public static void main(String[] args) {
+
+        int lines = 0, words = 0, chars = 0;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("input.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"));
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                lines++;
+                chars += line.length();
+                words += line.split(" ").length;
+            }
+
+            bw.write("Lines: " + lines + "\n");
+            bw.write("Words: " + words + "\n");
+            bw.write("Characters: " + chars);
+
+            br.close();
+            bw.close();
+
+            System.out.println("Analysis written to output.txt");
+
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+
+
+
+
+29-multithreading
+
+import java.lang.*;
+
+class Num extends Thread {
+    static int p = 0, np = 0;
+
+    public void run() {
+        try {
+            while (true) {
+                int n = (int)(Math.random() * 50) + 1;
+                System.out.println("\nGenerated: " + n);
+
+                if (isPrime(n)) new Prime(n).start();
+                else new Factor(n).start();
+
+                sleep(1000);
+            }
+        } catch (Exception e) {}
+    }
+
+    boolean isPrime(int n) {
+        if (n < 2) return false;
+        for (int i = 2; i <= n/2; i++)
+            if (n % i == 0) return false;
+        return true;
+    }
+}
+
+class Prime extends Thread {
+    int n;
+    Prime(int n) { this.n = n; }
+
+    public void run() {
+        Num.p++;
+        System.out.println("Prime: " + n + " Count: " + Num.p);
+    }
+}
+
+class Factor extends Thread {
+    int n;
+    Factor(int n) { this.n = n; }
+
+    public void run() {
+        Num.np++;
+        System.out.print("Factors of " + n + ": ");
+        for (int i = 1; i <= n; i++)
+            if (n % i == 0) System.out.print(i + " ");
+        System.out.println(" Count: " + Num.np);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new Num().start();
+    }
+}
+
+
+
+
+30-applet uppercase, lowercase
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+public class TextEditorFX extends Application {
+
+    public void start(Stage stage) {
+
+        TextField input = new TextField();
+        TextArea output = new TextArea();
+
+        Button upper = new Button("UPPERCASE");
+        Button lower = new Button("lowercase");
+        Button title = new Button("Title Case");
+
+        upper.setOnAction(e -> output.setText(input.getText().toUpperCase()));
+        lower.setOnAction(e -> output.setText(input.getText().toLowerCase()));
+
+        title.setOnAction(e -> {
+            String[] words = input.getText().toLowerCase().split(" ");
+            String result = "";
+            for (String w : words)
+                result += Character.toUpperCase(w.charAt(0)) + w.substring(1) + " ";
+            output.setText(result.trim());
+        });
+
+        HBox buttons = new HBox(10, upper, lower, title);
+
+        BorderPane root = new BorderPane();
+        root.setTop(input);
+        root.setCenter(buttons);
+        root.setBottom(output);
+
+        stage.setScene(new Scene(root, 350, 250));
+        stage.setTitle("Text Formatter");
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
+}
+
+
