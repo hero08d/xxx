@@ -1,0 +1,11 @@
+male(john).
+
+parent(john, mary).
+
+father(X,Y) :-
+    male(X),
+    parent(X,Y).
+
+
+
+father(john,mary)-- output
