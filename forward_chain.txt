@@ -1,0 +1,20 @@
+:- dynamic fact/1.
+
+% Initial Facts
+fact(male(john)).
+fact(parent(john, mary)).
+
+% Rule
+rule(father(X,Y),
+     (male(X), parent(X,Y))).
+
+% Forward Chaining
+forward_chain :-
+    rule(Conclusion, Conditions),
+    call(Conditions),
+    \+ fact(Conclusion),
+    assert(fact(Conclusion)),
+    write(Conclusion), nl,
+    fail.
+
+forward_chain.
