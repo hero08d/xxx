@@ -47,3 +47,47 @@ def h(n):
     return H[n]
 
 astar('A', 'D')
+
+
+
+
+
+
+
+graph = {
+    'A': [('B',1), ('C',3)],
+    'B': [('D',5)],
+    'C': [('D',2)],
+    'D': []
+}
+
+H = {'A':7, 'B':6, 'C':2, 'D':0}
+
+def astar(start, goal):
+
+    open = [(start,0)]
+
+    while open:
+
+        # first node as minimum
+        current, cost = open[0]
+
+        # find minimum g+h manually
+        for node, c in open:
+
+            if c + H[node] < cost + H[current]:
+                current = node
+                cost = c
+
+        open.remove((current, cost))
+
+        print(current)
+
+        if current == goal:
+            print("Goal reached")
+            return
+
+        for neighbour, edge_cost in graph[current]:
+            open.append((neighbour, cost + edge_cost))
+
+astar('A', 'D')
