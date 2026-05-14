@@ -1,0 +1,654 @@
+3 fork 
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/wait.h>
+
+int main() {
+    pid_t pid;
+
+    printf("Parent PID: %d\n", getpid());
+
+    pid = fork();
+
+    if(pid < 0) {
+        printf("Fork failed\n");
+        exit(1);
+    }
+
+    if(pid == 0) {
+        // Child process
+        printf("Child Process\n");
+        printf("Child PID: %d\n", getpid());
+        printf("Parent PID: %d\n", getppid());
+        
+        sleep(2);
+        printf("Child exiting\n");
+        exit(0);
+    } 
+    else {
+        // Parent process
+        wait(NULL);
+        printf("Parent resumed\n");
+        printf("Parent exiting\n");
+    }
+
+    return 0;
+}
+
+
+
+10 paging
+// Online C compiler to run C program online
+#include <stdio.h>
+#include <stdlib.h>
+#define PAGE_SIZE 4
+#define MEM_SIZE 20
+#define NUM_PAGES 5 
+int main() {
+    int pagetb[NUM_PAGES]={2,3,4,6,7};
+    int pyadd,logadd,offset,pageno;
+    
+    printf("enter the logical address:");
+    scanf("%d",&logadd);
+    
+    if(logadd<0 || logadd>=MEM_SIZE){
+        printf("invlid address");
+    }
+    pageno=logadd/PAGE_SIZE;
+    offset=logadd%PAGE_SIZE;
+    
+    pyadd=(pagetb[pageno]*PAGE_SIZE)+offset;
+    printf("Logical Address: %d -> Page: %d, Offset: %d\n", logadd, pageno, offset);
+    printf("Mapped to Physical Address: %d\n", pyadd);
+
+    return 0;
+}
+
+
+segmentation
+#include<stdio.h>
+#include<stdlib.h>
+
+struct segment{
+    int limit;
+    int base;
+};
+int main(){
+    struct segment segtb[3]={{1000,234},{1200,254},{1400,546}};
+    int segno,offset,phyadd;
+    
+    printf("enter the offset and segno:");
+    scanf("%d%d",&offset,&segno);
+    
+    if(segno<0 || segno>=3){
+        printf("invalid segno"); 
+    }
+    else if (offset>=segtb[segno].limit){
+        printf("trap here");
+    }
+    else{
+        phyadd=segtb[segno].base+offset;
+        printf("the physical address is :%d",phyadd);
+    }
+}
+
+
+9.THREADING
+
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+
+sem_t mutex, wrt;
+int readcount = 0;
+
+// Reader Thread
+void* reader(void* arg) {
+    sem_wait(&mutex);
+    readcount++;
+    if (readcount == 1)
+        sem_wait(&wrt);   // first reader blocks writer
+    sem_post(&mutex);
+
+    printf("Reader is reading\n");
+    sleep(1);
+
+    sem_wait(&mutex);
+    readcount--;
+    if (readcount == 0)
+        sem_post(&wrt);   // last reader releases writer
+    sem_post(&mutex);
+
+    return NULL;
+}
+
+// Writer Thread
+void* writer(void* arg) {
+    sem_wait(&wrt);
+
+    printf("Writer is writing\n");
+    sleep(1);
+
+    sem_post(&wrt);
+    return NULL;
+}
+
+int main() {
+    pthread_t r1, r2, w1;
+
+    sem_init(&mutex, 0, 1);
+    sem_init(&wrt, 0, 1);
+
+    // Create threads
+    pthread_create(&r1, NULL, reader, NULL);
+    pthread_create(&r2, NULL, reader, NULL);
+    pthread_create(&w1, NULL, writer, NULL);
+
+    // Wait for threads
+    pthread_join(r1, NULL);
+    pthread_join(r2, NULL);
+    pthread_join(w1, NULL);
+
+    return 0;
+}
+
+
+
+8th Deadlock detection
+#include <stdio.h>
+
+int main() {
+
+    int n, r, i, j;
+
+    int alloc[10][10], req[10][10];
+
+    int avail[10], finish[10]={0};
+
+    printf("Enter no of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter no of resources: ");
+    scanf("%d",&r);
+
+    printf("Enter Allocation Matrix:\n");
+    for(i=0;i<n;i++)
+        for(j=0;j<r;j++)
+            scanf("%d",&alloc[i][j]);
+
+    printf("Enter Request Matrix:\n");
+    for(i=0;i<n;i++)
+        for(j=0;j<r;j++)
+            scanf("%d",&req[i][j]);
+
+    printf("Enter Available Resources:\n");
+    for(i=0;i<r;i++)
+        scanf("%d",&avail[i]);
+
+    int count=0;
+
+    while(count<n){
+
+        int found=0;
+
+        for(i=0;i<n;i++){
+
+            if(finish[i]==0){
+
+                int possible=1;
+
+                for(j=0;j<r;j++){
+
+                    if(req[i][j] > avail[j]){
+
+                        possible=0;
+                        break;
+                    }
+                }
+
+                if(possible){
+
+                    for(j=0;j<r;j++)
+                        avail[j]+=alloc[i][j];
+
+                    finish[i]=1;
+
+                    count++;
+
+                    found=1;
+                }
+            }
+        }
+
+        if(found==0){
+
+            printf("Deadlock Detected");
+            return 0;
+        }
+    }
+
+    printf("No Deadlock");
+}
+7th deadlock
+#include <stdio.h>
+
+int main() {
+
+    int n, r, i, j;
+    
+    int alloc[10][10], max[10][10], need[10][10];
+    
+    int avail[10], finish[10]={0};
+
+    printf("Enter no of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter no of resources: ");
+    scanf("%d",&r);
+
+    printf("Enter Allocation Matrix:\n");
+    for(i=0;i<n;i++)
+        for(j=0;j<r;j++)
+            scanf("%d",&alloc[i][j]);
+
+    printf("Enter Max Matrix:\n");
+    for(i=0;i<n;i++)
+        for(j=0;j<r;j++)
+            scanf("%d",&max[i][j]);
+
+    printf("Enter Available Resources:\n");
+    for(i=0;i<r;i++)
+        scanf("%d",&avail[i]);
+
+    // Need = Max - Allocation
+    for(i=0;i<n;i++)
+        for(j=0;j<r;j++)
+            need[i][j]=max[i][j]-alloc[i][j];
+
+    int count=0;
+
+    while(count<n){
+
+        int found=0;
+
+        for(i=0;i<n;i++){
+
+            if(finish[i]==0){
+
+                int possible=1;
+
+                for(j=0;j<r;j++){
+
+                    if(need[i][j] > avail[j]){
+
+                        possible=0;
+                        break;
+                    }
+                }
+
+                if(possible){
+
+                    for(j=0;j<r;j++)
+                        avail[j]+=alloc[i][j];
+
+                    finish[i]=1;
+
+                    count++;
+
+                    found=1;
+                }
+            }
+        }
+
+        if(found==0){
+
+            printf("System is NOT SAFE");
+            return 0;
+        }
+    }
+
+    printf("System is SAFE");
+}
+
+6.IPC pipeline
+
+Program (Very Short & Easy)
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    int fd[2];
+    pipe(fd);
+
+    if (fork() == 0) {  // Child
+        char msg[20];
+        read(fd[0], msg, sizeof(msg));
+        printf("Child received: %s\n", msg);
+    } else {            // Parent
+        write(fd[1], "Hello", 6);
+    }
+}
+
+🔹 2. SHARED MEMORY (Fastest IPC)
+
+#include <stdio.h>
+#include <sys/shm.h>
+
+int main() {
+    int shmid = shmget(1234, 1024, 0666 | IPC_CREAT);
+    char *data = (char*) shmat(shmid, NULL, 0);
+
+    if (fork() == 0) {
+        printf("Child read: %s\n", data);
+    } else {
+        sprintf(data, "Hello");
+    }
+}
+
+🔹 3. MESSAGE QUEUE (Structured IPC)
+#include <stdio.h>
+#include <sys/msg.h>
+
+struct msg {
+    long type;
+    char text[20];
+};
+
+int main() {
+    int id = msgget(1234, 0666 | IPC_CREAT);
+    struct msg m;
+
+    if (fork() == 0) {
+        msgrcv(id, &m, sizeof(m.text), 1, 0);
+        printf("Received: %s\n", m.text);
+    } else {
+        m.type = 1;
+        sprintf(m.text, "Hello");
+        msgsnd(id, &m, sizeof(m.text), 0);
+    }
+}
+
+
+
+
+5. semaphore
+#include <stdio.h>
+#include<stdlib.h>
+int mutex=1;
+int full=0;
+int empty;
+int buffersize;
+    
+int signal(int s){
+    return ++s;
+}
+    
+int wait(int s){
+    return --s;
+}
+    
+void producer(){
+    mutex=wait(mutex);
+    empty=wait(empty);
+    full=signal(full);
+    printf("full:%d|empty:%d",full,empty);
+    mutex=signal(mutex);
+}
+    
+void consumer(){
+    mutex=wait(mutex);
+    full=wait(full);
+    empty=signal(empty);
+    printf("full:%d|empty:%d",full,empty);
+    mutex=signal(mutex);    
+}
+int main(){
+    int choice;
+    printf("enter buffersize:");
+    scanf("%d",&buffersize);
+    empty=buffersize;
+    while(1){
+        printf("\n1.consumer\t 2. producer \t 3.exit\n");
+        printf("\nenter the choice:");
+        scanf("%d",&choice);
+        switch (choice) {
+            case 1:
+                if (full != 0) consumer();
+                else printf("Buffer Empty!\n");
+                break; // Essential!
+
+            case 2:
+                if (empty != 0) producer();
+                else printf("Buffer Full!\n");
+                break; // Essential!
+
+            case 3:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
+
+
+
+
+Round Robin:
+/#include <stdio.h>
+
+int main() {
+    int n, wt[20], bt[20], rem_bt[20], tat[20], ft[20];
+    int i, tq, remain, time = 0;
+    float avg_tat = 0, avg_wt = 0;
+
+    printf("enter number of processes:");
+    scanf("%d", &n);
+
+    remain = n;
+
+    for(i = 0; i < n; i++) {
+        printf("enter the burst time for process %d:", i+1);
+        scanf("%d", &bt[i]);
+        rem_bt[i] = bt[i];
+        tat[i] = 0;   // FIX
+    }
+
+    printf("enter the time quantum:");
+    scanf("%d", &tq);
+
+    for(i = 0; remain != 0; ) {
+        if(rem_bt[i] <= tq && rem_bt[i] > 0) {
+            time += rem_bt[i];
+            rem_bt[i] = 0;
+            remain--;
+
+            ft[i] = time;             
+            tat[i] = ft[i];           // AT = 0
+            wt[i] = tat[i] - bt[i];
+        }
+        else if(rem_bt[i] > 0) {
+            rem_bt[i] -= tq;
+            time += tq;
+        }
+
+        if(i == n - 1)
+            i = 0;
+        else
+            i++;
+    }
+
+    printf("\nProcess\tBT\tFT\tWT\tTAT\n");
+    for(i = 0; i < n; i++) {
+        avg_tat += tat[i];
+        avg_wt += wt[i];
+        printf("P%d\t%d\t%d\t%d\t%d\n", i+1, bt[i], ft[i], wt[i], tat[i]);
+    }
+
+    printf("\nAverage Waiting Time = %.2f", avg_wt / n);
+    printf("\nAverage Turnaround Time = %.2f", avg_tat / n);
+
+    return 0;
+}
+
+
+fcfs
+#include<stdio.h>
+#include<stdlib.h>
+int main(){
+    int n,bt[20],tat[20],wt[20];
+    float avg_tat=0,avg_wt=0;
+    printf("enter the no of process:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        
+        printf("enter the burst time for p%d:",i+1);
+        scanf("%d",&bt[i]);
+    }
+    wt[0]=0;
+    for(int i=1;i<n;i++){
+        wt[i]=wt[i-1]+bt[i-1];
+    }
+    for(int i=0;i<n;i++){
+        tat[i]=wt[i]+bt[i];
+        avg_tat+=tat[i];
+        avg_wt+=wt[i];
+    }
+    printf("\nProcess\tBT\tWT\tTAT\n");
+    for(int i=0; i < n; i++){
+        printf("P%d\t%d\t%d\t%d\n",i+1, bt[i], wt[i], tat[i]);
+    }
+    printf("\nAverage Waiting Time = %.2f", avg_wt/n);
+    printf("\nAverage Turnaround Time = %.2f", avg_tat/n);
+}
+
+
+
+sjf
+
+// Online C compiler to run C program online
+#include <stdio.h>
+#include<stdlib.h>
+int main() {
+    int n,bt[20],tat[20],wt[20],p[20],i,j,temp;
+    float avg_tat=0,avg_wt=0;
+    printf("enter the no of process:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        p[i]=i+1;
+        printf("enter the burst time for p%d:",i+1);
+        scanf("%d",&bt[i]);
+    }
+    for(int i=0;i<n-1;i++){
+        for(int j=i+1;j<n;j++){
+            if(bt[i]>bt[j]){
+                temp=bt[i];bt[i]=bt[j];bt[j]=temp;
+                temp=p[i];p[i]=p[j];p[j]=temp;
+            }
+        }
+    }
+    
+    wt[0]=0;
+    for(int i=1;i<n;i++){
+         wt[i]=wt[i-1]+bt[i-1];
+    }
+    for(int i=0;i<n;i++){
+        tat[i]=wt[i]+bt[i];
+        avg_tat+=tat[i];
+        avg_wt+=wt[i];
+    }
+    printf("\nProcess\tBT\tWT\tTAT\n");
+    for(int i=0; i < n; i++){
+        printf("P\t%d\t%d\t%d\t%d\n",p[i], bt[i], wt[i], tat[i]);
+    }
+    printf("\nAverage Waiting Time = %.2f", avg_wt/n);
+    printf("\nAverage Turnaround Time = %.2f", avg_tat/n);
+}
+
+
+
+priority
+// Online C compiler to run C program online
+#include <stdio.h>
+#include<stdlib.h>
+int main() {
+    int n,bt[20],tat[20],wt[20],pr[20],p[20],i,j,temp;
+    float avg_tat=0,avg_wt=0;
+    printf("enter the no of process:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        p[i]=i+1;
+        printf("enter the priority burst time for p%d:",i+1);
+        scanf("%d%d",&pr[i],&bt[i]);
+    }
+    for(int i=0;i<n-1;i++){
+        for(int j=i+1;j<n;j++){
+            if(pr[i]>pr[j]){
+                temp=pr[i];pr[i]=pr[j];pr[j]=temp;
+                temp=bt[i];bt[i]=bt[j];bt[j]=temp;
+                temp=p[i];p[i]=p[j];p[j]=temp;
+            }
+        }
+    }
+    
+    wt[0]=0;
+    for(int i=1;i<n;i++){
+         wt[i]=wt[i-1]+bt[i-1];
+    }
+    for(int i=0;i<n;i++){
+        tat[i]=wt[i]+bt[i];
+        avg_tat+=tat[i];
+        avg_wt+=wt[i];
+    }
+    printf("\nProcess\tBT\tWT\tTAT\n");
+    for(int i=0; i < n; i++){
+        printf("P\t%d\t%d\t%d\t%d\n",p[i], bt[i], wt[i], tat[i]);
+    }
+    printf("\nAverage Waiting Time = %.2f", avg_wt/n);
+    printf("\nAverage Turnaround Time = %.2f", avg_tat/n);
+}
+
+
+
+
+
+
+3. fork
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/wait.h>
+
+int main() {
+    pid_t pid;
+
+    printf("Parent PID: %d\n", getpid());
+
+    pid = fork();
+
+    if(pid < 0) {
+        printf("Fork failed\n");
+        exit(1);
+    }
+
+    if(pid == 0) {
+        // Child process
+        printf("Child Process\n");
+        printf("Child PID: %d\n", getpid());
+        printf("Parent PID: %d\n", getppid());
+        
+        sleep(2);
+        printf("Child exiting\n");
+        exit(0);
+    } 
+    else {
+        // Parent process
+        wait(NULL);
+        printf("Parent resumed\n");
+        printf("Parent exiting\n");
+    }
+
+    return 0;
+}

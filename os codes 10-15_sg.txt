@@ -1,0 +1,706 @@
+15. file allocation strategies
+
+
+Initialize an array b[100] with all elements set to 0 to represent free memory blocks.
+
+
+Accept the file name and number of blocks required for allocation.
+
+
+Traverse the memory blocks from index 0 to 99.
+
+
+Check whether each block is free (b[i] == 0).
+
+
+If consecutive free blocks are found, store the starting index and count the blocks until the required number is reached.
+
+
+If enough contiguous blocks are available, mark them as allocated (1) and display the allocated block numbers; otherwise display "No space".
+
+
+Repeat the process for all files and terminate the program
+
+
+#include<stdio.h>
+
+int b[100]={0};
+
+void create(char name[],int n){
+int i,s=-1,c=0;
+
+for(i=0;i<100&&c<n;i++){
+if(!b[i]){
+if(c==0) s=i;
+b[i]=1;
+c++;
+}
+else c=0,s=-1;
+}
+
+if(c==n){
+printf("%s blocks: ",name);
+for(i=s;i<s+n;i++) printf("%d ",i);
+}
+else
+printf("No space for %s",name);
+
+printf("\n");
+}
+
+int main(){
+create("file1",3);
+create("file2",2);
+create("file3",4);
+create("file4",95);
+}
+
+
+Algorithm: Indexed File Allocation
+Initialize an array used[100] with all elements set to 0 to represent free disk blocks.
+Accept the file name and number of blocks required for allocation.
+Generate a random free block and allocate it as the index block for the file.
+Traverse the memory blocks from 0 to 99 to find free blocks.
+Allocate free blocks to the file until the required number of blocks is reached.
+Mark the allocated blocks as used and store their block numbers in the index block list.
+Display the file name, index block number, allocated blocks, and terminate the program.
+
+Indexed-
+#include<stdio.h>
+
+int b[100]={0};
+
+void create(char name[], int n){
+
+    int i, j=0;
+
+    int blocks[10];
+
+    int index=-1;
+
+    // Find free block for index block
+    for(i=0;i<100;i++){
+
+        if(b[i]==0){
+
+            index=i;
+
+            b[i]=1;
+
+            break;
+        }
+    }
+
+    // Allocate file blocks
+    for(i=0; i<100 && j<n; i++){
+
+        if(b[i]==0){
+
+            blocks[j]=i;
+
+            b[i]=1;
+	    j++;
+        }
+    }
+
+    printf("%s\n",name);
+
+    printf("Index Block : %d\n",index);
+
+    printf("Allocated Blocks : ");
+
+    for(i=0;i<n;i++)
+        printf("%d ",blocks[i]);
+
+    printf("\n");
+}
+
+int main(){
+
+    create("file1",3);
+
+    create("file2",2);
+
+    create("file3",4);
+}
+
+
+Linked
+
+#include<stdio.h>
+
+int b[100]={0};
+
+void create(char name[], int n){
+
+    int i, j=0;
+
+    int blocks[10];
+
+    // Allocate blocks
+    for(i=0; i<100 && j<n; i++){
+
+        if(b[i]==0){
+
+            blocks[j]=i;
+
+            b[i]=1;
+
+            j++;
+        }
+    }
+
+    // Starting block
+    int start = blocks[0];
+
+    printf("\n%s\n",name);
+
+    printf("Start Block : %d\n",start);
+
+    printf("Linked Allocation : ");
+
+    for(i=0;i<n;i++){
+
+        printf("%d",blocks[i]);
+
+        if(i!=n-1)
+            printf(" -> ");
+    }
+
+    printf(" -> NULL\n");
+}
+
+int main(){
+
+    create("file1",3);
+
+    create("file2",2);
+
+    create("file3",4);
+}
+14. Single level directory
+
+#include<stdio.h>
+#include<string.h>
+
+struct File{
+    char name[20];
+    int size;
+};
+
+int main(){
+
+    struct File f[10];
+
+    int n=2;
+
+    strcpy(f[0].name,"file1.txt");
+    f[0].size=100;
+
+    strcpy(f[1].name,"file2.txt");
+    f[1].size=200;
+
+    printf("Files:\n");
+
+    for(int i=0;i<n;i++)
+        printf("%s %d\n",f[i].name,f[i].size);
+}
+
+Two level directory
+
+#include<stdio.h>
+#include<string.h>
+
+struct File{
+    char name[20];
+    int size;
+};
+
+struct Dir{
+    char dname[20];
+    struct File f[10];
+    int n;
+};
+
+int main(){
+
+    struct Dir d[2];
+
+    strcpy(d[0].dname,"CSE");
+    d[0].n=1;
+
+    strcpy(d[0].f[0].name,"os.txt");
+    d[0].f[0].size=100;
+
+    strcpy(d[1].dname,"ECE");
+    d[1].n=1;
+
+    strcpy(d[1].f[0].name,"network.txt");
+    d[1].f[0].size=200;
+
+    for(int i=0;i<2;i++){
+
+        printf("\n%s Directory\n",d[i].dname);
+
+        for(int j=0;j<d[i].n;j++)
+            printf("%s %d\n",
+            d[i].f[j].name,
+            d[i].f[j].size);
+    }
+}
+
+Hierarchical directory
+#include<stdio.h>
+#include<string.h>
+
+struct File{
+    char name[20];
+    int size;
+};
+
+struct Dir{
+    char dname[20];
+    struct File f[10];
+    int n;
+};
+
+int main(){
+
+    struct Dir root, sub;
+
+    strcpy(root.dname,"root");
+
+    strcpy(sub.dname,"CSE");
+
+    sub.n=1;
+
+    strcpy(sub.f[0].name,"os.txt");
+
+    sub.f[0].size=100;
+
+    printf("Root Directory : %s\n",root.dname);
+
+    printf("Sub Directory : %s\n",sub.dname);
+
+    printf("File : %s %d\n",
+    sub.f[0].name,
+    sub.f[0].size);
+}
+Directed acyclic graph
+#include<stdio.h>
+#include<string.h>
+
+struct File{
+    char name[20];
+    int size;
+};
+
+struct Dir{
+    char dname[20];
+    struct File f;
+};
+
+int main(){
+
+    struct Dir d1,d2;
+
+    strcpy(d1.dname,"CSE");
+    strcpy(d1.f.name,"os.txt");
+    d1.f.size=100;
+
+    strcpy(d2.dname,"ECE");
+    strcpy(d2.f.name,"os.txt");
+    d2.f.size=100;
+
+    printf("%s -> %s\n",
+    d1.dname,
+    d1.f.name);
+
+    printf("%s -> %s\n",
+    d2.dname,
+    d2.f.name);
+}
+
+
+13 FCFS
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(){
+
+    int h,n,i;
+
+    int req[100];
+
+    int total=0;
+
+    printf("Enter initial head position: ");
+    scanf("%d",&h);
+
+    printf("Enter number of requests: ");
+    scanf("%d",&n);
+
+    printf("Enter requests:\n");
+
+    for(i=0;i<n;i++)
+        scanf("%d",&req[i]);
+
+    printf("\nHead Movement:\n");
+
+    for(i=0;i<n;i++){
+
+        printf("%d -> %d\n",h,req[i]);
+
+        total = total + abs(req[i]-h);
+
+        h = req[i];
+    }
+
+    printf("\nTotal Head Movement = %d",total);
+}
+
+12.Page replacement algo
+FIFO
+
+#include<stdio.h>
+int f[3]={-1,-1,-1},p[20],pf=0,h=0;
+
+int present(int x){
+for(int i=0;i<3;i++) if(f[i]==x) return 1;
+return 0;
+}
+
+int victim(int k){
+int i,j,pos=0,max=-1;
+for(i=0;i<3;i++){
+	for(j=k;j<20;j++) 
+		if(f[i]==p[j]) break;
+		if(j==20) return i;
+		if(j>max) max=j,pos=i;
+}
+return pos;
+}
+
+int main(){
+int i,j,v;
+for(i=0;i<20;i++) p[i]=rand()%10;
+
+printf("Pages:\n");
+for(i=0;i<20;i++) printf("%d ",p[i]);
+
+printf("\n\n");
+for(i=0;i<20;i++){
+if(!present(p[i])){ v=victim(i+1); f[v]=p[i]; pf++; }
+else h++;
+
+printf("%d -> ",p[i]);
+for(j=0;j<3;j++) printf("%d ",f[j]);
+printf("\n");
+}
+
+printf("\nPage Faults=%d",pf);
+printf("\nHit Ratio=%.2f%%",(float)h/20*100);
+}
+
+
+LRU
+#include<stdio.h>
+
+struct Frame{ int p,c; }f[3]={{-1,0},{-1,0},{-1,0}};
+int pf=0,h=0;
+
+int present(int x){
+for(int i=0;i<3;i++)
+if(f[i].p==x){ f[i].c++; h++; return 1; }
+return 0;
+}
+
+int victim(){
+int i,m=0;
+for(i=1;i<3;i++) if(f[i].c<f[m].c) m=i;
+return m;
+}
+
+int main(){
+int p[10]={1,2,3,4,1,2,5,1,2,3},i,j,v;
+
+for(i=0;i<10;i++){
+if(!present(p[i])){
+v=victim();
+f[v].p=p[i];
+f[v].c=1;
+pf++;
+}
+
+printf("%d -> ",p[i]);
+for(j=0;j<3;j++) printf("%d ",f[j].p);
+printf("\n");
+}
+
+printf("\nPage Faults=%d",pf);
+printf("\nPage Hits=%d",h);
+printf("\nHit Ratio=%.2f",(float)h/10);
+}
+
+
+
+Optimal
+#include<stdio.h>
+#include<stdlib.h>
+
+int f[3]={-1,-1,-1},p[20],pf=0,h=0;
+
+int present(int x){
+for(int i=0;i<3;i++) if(f[i]==x) return 1;
+return 0;
+}
+
+int victim(int k){
+int i,j,pos=0,max=-1;
+for(i=0;i<3;i++){
+for(j=k;j<20;j++) if(f[i]==p[j]) break;
+if(j==20) return i;
+if(j>max) max=j,pos=i;
+}
+return pos;
+}
+
+int main(){
+int i,j,v;
+
+for(i=0;i<20;i++) p[i]=rand()%10;
+
+printf("Pages:\n");
+for(i=0;i<20;i++) printf("%d ",p[i]);
+
+printf("\n\n");
+for(i=0;i<20;i++){
+
+if(!present(p[i])){
+v=victim(i+1);
+f[v]=p[i];
+pf++;
+}
+else h++;
+
+printf("%d -> ",p[i]);
+for(j=0;j<3;j++) printf("%d ",f[j]);
+printf("\n");
+}
+
+printf("\nPage Faults=%d",pf);
+printf("\nHit Ratio=%.2f%%",(float)h/20*100);
+}
+
+
+
+
+
+11.memory allocation method
+
+first fit method
+#include<stdio.h>
+
+int main(){
+
+    int b[5]={100,500,200,300,600};
+
+    int p[4]={212,417,112,426};
+
+    int i,j;
+
+    for(i=0;i<4;i++){
+
+        int found=0;
+
+        for(j=0;j<5;j++){
+
+            if(b[j] >= p[i]){
+
+                printf("P%d -> B%d\n",i+1,j+1);
+
+                b[j] = b[j] - p[i];
+
+                found=1;
+
+                break;
+            }
+        }
+
+        if(found==0)
+            printf("P%d -> Not Allocated\n",i+1);
+    }
+}
+
+
+BEST-FIT
+
+Start the program.
+Initialize memory block sizes and process sizes.
+For each process, check all memory blocks.
+Find all blocks that can hold the process.
+Select the block with the smallest sufficient size.
+Allocate the process to that block.
+Reduce the selected block size by the process size.
+If no suitable block exists, mark the process as “Not Allocated”.
+Repeat for all processes.
+Display the allocation result and stop.
+
+#include<stdio.h>
+
+int main(){
+
+    int b[5]={100,500,200,300,600};
+
+    int p[4]={212,417,112,426};
+
+    int i,j;
+
+    for(i=0;i<4;i++){
+
+        int pos=-1;
+
+        for(j=0;j<5;j++){
+
+            if(b[j] >= p[i]){
+
+                if(pos==-1 || b[j] < b[pos]){
+
+                    pos=j;
+                }
+            }
+        }
+
+        if(pos!=-1){
+
+            printf("P%d -> B%d\n",i+1,pos+1);
+
+            b[pos] = b[pos] - p[i];
+        }
+
+        else
+            printf("P%d -> Not Allocated\n",i+1);
+    }
+}
+
+
+
+Worst-fit
+Start the program.
+Initialize memory block sizes and process sizes.
+For each process, check all memory blocks.
+Find all blocks that can hold the process.
+Select the block with the largest available size.
+Allocate the process to that block.
+Reduce the selected block size by the process size.
+If no suitable block exists, mark the process as “Not Allocated”.
+Repeat for all processes.
+Display the allocation result and stop
+
+
+#include<stdio.h>
+
+int main(){
+
+    int b[5]={100,500,200,300,600};
+
+    int p[4]={212,417,112,426};
+
+    int i,j;
+
+    for(i=0;i<4;i++){
+
+        int pos=-1;
+
+        for(j=0;j<5;j++){
+
+            if(b[j] >= p[i]){
+
+                if(pos==-1 || b[j] > b[pos]){
+
+                    pos=j;
+                }
+            }
+        }
+
+        if(pos!=-1){
+
+            printf("P%d -> B%d\n",i+1,pos+1);
+
+            b[pos] = b[pos] - p[i];
+        }
+
+        else
+            printf("P%d -> Not Allocated\n",i+1);
+    }
+}
+
+
+10.1 Implementation of mem management using paging
+
+#include<stdio.h>
+
+int main(){
+
+int ms=1000,ps=100,np=2,nop,rem;
+int pg[2]={3,2};
+int f[2][20]={{1,3,5},{2,4}};
+int x=1,y=2,off=50,pa;
+
+nop=ms/ps;
+rem=nop;
+
+printf("Pages available=%d\n",nop);
+
+for(int i=0;i<np;i++){
+if(pg[i]>rem){
+printf("Memory Full");
+return 0;
+}
+rem-=pg[i];
+}
+
+if(x>np || y>=pg[x-1] || off>=ps)
+printf("Invalid Address");
+else{
+pa=f[x-1][y]*ps+off;
+printf("Physical Address=%d",pa);
+}
+}
+
+
+
+10.2 mem management using segmentation
+
+
+#include<stdio.h> 
+struct segtable 
+{ 
+int base; 
+int limit; 
+}; 
+int main() 
+{ 
+struct segtable s[10]; 
+int nos,i,sno,off,pa; 
+printf("Enter the number of segments: "); 
+scanf("%d",&nos); 
+printf("Enter the base and limit in the segment table: ");
+for(i=0;i<nos;i++) 
+{ 
+scanf("%d",&s[i].base); 
+scanf("%d",&s[i].limit); 
+} 
+printf("Enter the logical address(Segment No and Offset): "); 
+scanf("%d %d",&sno,&off); 
+if(s[sno].limit>=off) 
+{ 
+pa=s[sno].base+off; 
+printf("Physical address: %d\n",pa); 
+} 
+else 
+{ 
+printf("Invalid address"); 
+} 
+}
